@@ -39,7 +39,7 @@ class ExamsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /exams/1
+  # PATCH/PUT /exams/1 
   # PATCH/PUT /exams/1.json
   def update
     if @exam.update(exam_params)

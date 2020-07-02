@@ -6,7 +6,6 @@
     </p>
   </div>
 </div>
-
 <div class="row">
   <div class="col-md-2">
     Point Po <br> <%= "x: #{@exam.point_po.x}, y: #{@exam.point_po.y}" %>
@@ -37,3 +36,75 @@
     </div>
   </div>
 </div>
+
+<html>
+	<head>
+			<style>
+			body { margin: 0; }
+			canvas { display: block; }
+		</style>
+	</head>
+	<body>
+			
+    <script>
+    
+    var clock = new THREE.Clock();
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
+
+    var camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 1, 500 );
+    camera.position.set( 90, 90, 90 );
+           
+    var scene = new THREE.Scene();
+    var material = new THREE.LineBasicMaterial( { color: 0x00ff00 } );
+    
+    <!--VALORES DOS PONTOS DIVIDIDOS POR 10 PARA MELHORAR ENQUADRAMENTO-->
+    
+    var points = []
+    points.push( new THREE.Vector3( <%= "#{@exam.point_po.x}/10"%>, <%= "#{@exam.point_po.y}/10"%>, 0 ) );
+    points.push( new THREE.Vector3( <%= "#{@exam.point_or.x}/10"%>, <%= "#{@exam.point_or.y}/10"%>, 0 ) );
+    
+    var points2 = []
+    points2.push( new THREE.Vector3( <%= "#{@exam.point_n.x}/10"%>, <%= "#{@exam.point_n.y}/10"%>, 0 ) );
+    points2.push( new THREE.Vector3( <%= "#{@exam.point_a.x}/10"%>, <%= "#{@exam.point_a.y}/10"%>, 0 ) );
+    
+    var geometry = new THREE.BufferGeometry().setFromPoints( points );
+    var geometry2 = new THREE.BufferGeometry().setFromPoints( points2 );
+    
+    var line = new THREE.Line( geometry, material );
+    var line2 = new THREE.Line( geometry2, material );
+    var trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
+		trackballControls.rotateSpeed = 1.0;
+		trackballControls.zoomSpeed = 1.0;
+		trackballControls.panSpeed = 1.0;
+
+    var controls = new function()
+		{
+			this.rotationSpeed 	= 1.0;
+			this.zoomSpeed 		= 1.0;
+			this.panSpeed 		= 1.0;
+		};
+    
+		function animate()
+		{
+			var delta = clock.getDelta();
+			
+			trackballControls.update(delta);
+
+      trackballControls.rotateSpeed = controls.rotationSpeed;
+			trackballControls.zoomSpeed = controls.zoomSpeed;
+			trackballControls.panSpeed = controls.panSpeed;
+					
+			requestAnimationFrame(animate);
+      scene.add( line );
+      scene.add( line2 );
+			renderer.render(scene, camera);
+		}
+		
+		animate();
+		
+      
+    </script>
+	</body>
+</html>   

@@ -13,5 +13,13 @@ class Exam < ApplicationRecord
 
   def maxillary_depth_angle
     return nil if self.point_po.x.nil? or self.point_po.y.nil? or self.point_or.x.nil? or self.point_or.y.nil? or self.point_n.x.nil? or self.point_n.y.nil? or self.point_a.x.nil? or self.point_a.y.nil?
+    m1 = (self.point_or.y - self.point_po.y)/(self.point_or.x - self.point_po.x)
+    m2 = (self.point_a.y-self.point_n.y)/(self.point_a.x-self.point_n.x)
+    atg = ((m2 - m1) / (1 + (m2 * m1)))
+    if atg < 0
+    angle = (Math.atan(atg.abs) * 180/Math::PI)
+    else
+      angle = 180 - (Math.atan(atg.abs) * 180/Math::PI)
+    end
   end
 end
